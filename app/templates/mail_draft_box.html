@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <link type="text/css" rel="stylesheet" href="../../static/css/components.css"/>
+    <link type="text/css" rel="stylesheet" href="../../static/css/custom.css"/>
+    <!-- end of global styles-->
+
+    <link type="text/css" rel="stylesheet" href="../../static/plugins/fullcalendar/css/fullcalendar.min.css"/>
+    <link type="text/css" rel="stylesheet" href="../../static/plugins/toastr/css/toastr.min.css"/>
+
+    <link type="text/css" rel="stylesheet" href="../../static/css/mail_box.css"/>
+    <!-- style="background-color:#f3f3f4;" -->
+    <link rel="stylesheet" href="../../static/layui-v2.5.7/layui/css/layui.css" media="all">
+
+    <!--
+    <style type="text/css">
+        body .notice_skin .layui-layer-btn a{background: #45ba5a;}
+    </style>
+    -->
+    <style type="text/css>">
+        body{
+            unselectable: all;
+            -moz-user-select: all;
+            onselectstart: all;
+            -webkit-user-select: all;
+        }
+    </style>
+</head>
+<body class="body ">
+<div id="wrap" style="background-color:#f3f3f4;">
+    <div class="wrapper">
+        <div id="content" class="bg-container" style="background-color:#f3f3f4;">
+            <div class="outer">
+                <div class="inner bg-light lter bg-container cal_btn_hov" style="background-color:#f3f3f4;">
+                    <div class="row web-mail">
+                        <div class="col-md-12 ">
+                            <div class="card mail media_max_991">
+                                <div class="card-header bg-white">
+                                    <div class="row">
+                                        <div class="col-md-8 col-12 m-t-10 dropdown_list_hover">
+                                            <div class="btn-group float-left table-bordereds">
+
+                                                <label class="custom-control custom-checkbox mr-0 mb-0 ">
+                                                    <input type="checkbox" class="custom-control-input select-all">
+                                                    <span class="custom-control-indicator"></span>
+                                                    全选
+                                                </label>
+
+
+                                            </div>
+
+                                            <a class="btn btn-labeled btn-primary" href="{{ purl }}/1">
+                                                   	<span class="btn-label">
+                                                     	<i class="fa fa-refresh"></i>
+                                                   	</span>
+                                                刷新
+                                            </a>
+
+                                            <button type="button" class="btn btn-labeled btn-warning mark-deleted">
+                                                   	<span class="btn-label">
+                                                     	<i class="fa fa-trash-o"></i>
+                                                   	</span>
+                                                删除
+                                            </button>
+                                            <button type="button" class="btn btn-labeled btn-danger delete-mail">
+                                                   	<span class="btn-label">
+                                                     	<i class="fa fa-trash-o"></i>
+                                                   	</span>
+                                                彻底删除
+                                            </button>
+                                            <span class="dropdown">
+                                                  	<button class="btn btn-mint dropdown-toggle" type="button"
+                                                            data-toggle="dropdown">
+                                                    	标记为
+                                                   	</button>
+                                                    <!-- 已发送-->
+                                                    <span class="dropdown-menu" aria-labelledby="about-us1">
+                                                   		<button class="dropdown-item mark-sended">已完成</button>
+
+                                                        <!--
+                                                     	<button class="dropdown-item mark-readed">已读邮件</button>
+                                                      	<button class="dropdown-item mark-unread">未读邮件</button>
+                                                        -->
+
+                                                  	</span>
+                                              	</span>
+                                            <!--
+                                            <span class="dropdown">
+                                                  	<button class="btn btn-mint dropdown-toggle" type="button"
+                                                            data-toggle="dropdown">
+                                                    	移动到
+                                                   	</button>
+                                                    <span class="dropdown-menu" aria-labelledby="about-us1">
+                                                   		<a class="dropdown-item" href="#">收信箱</a>
+                                                     	<a class="dropdown-item" href="#">发信箱</a>
+                                                      	<a class="dropdown-item" href="#">垃圾箱</a>
+
+                                                      	<hr style="margin-top:2px;margin-bottom:2px;"/>
+                                                      	<a class="dropdown-item" href="#">新建文件夹</a>
+
+                                                  	</span>
+                                                  	
+                                              	</span>
+                                            -->
+                                        </div>
+                                        <!-- 头部右边搜索框
+                                        <div class="col-md-4 col-12">
+                                            <div class="input-group margin bottom">
+                                                <input type="text" class="form-control inbox_search_height m-t-10"
+                                                       placeholder="Search">
+                                                <span class="input-group-btn">
+	                                                <button type="button"
+                                                            class="btn btn-mint inbox_search_height m-t-10">Search</button>
+	                                            </span>
+                                            </div>
+                                        </div>
+                                        -->
+                                    </div>
+                                </div>
+                                <!-- 第二行分类菜单 -->
+                                <div class="card-block m-t-25 p-d-0">
+                                    <div class="tabs tabs-bordered tabs-icons">
+
+                                        <div class="tab-content">
+                                            <div class="tab-pane table-responsive reset padding-all fade active show">
+                                                <table class="table">
+                                                <thead>
+                                                        <tr>
+                                                            <th>
+
+                                                            </th>
+                                                            <th>
+
+                                                            </th>
+                                                            <th>
+                                                                邮件人
+                                                            </th>
+                                                            <th>
+                                                                邮件标题
+                                                            </th>
+                                                            <th>
+
+                                                            </th>
+                                                            <th>
+                                                                时间
+                                                            </th>
+                                                            <th>
+                                                                操作
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="mail_content">
+                                                    {% for mail in mails %}
+                                                        <tr class="mail-unread"
+                                                            data-mailid="{{ mail['mail_id'] }}"
+                                                            data-mailindex="{{ mail['index'] }}">
+                                                            <td>
+
+                                                                <div class="checker m-l-20">
+                                                                    <label class="custom-control custom-checkbox">
+                                                                        <input name="checkbox" type="checkbox"
+                                                                               class="custom-control-input ">
+                                                                        <span class="custom-control-indicator"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+
+                                                            <td>
+
+                                                                {% if mail['is_star'] %}
+                                                                    <button class="fa fa-star text-warning"
+                                                                            style="border: none">
+                                                                        <div class="mail-index"
+                                                                             style="display: none">{{ mail['index'] }};{{ mail['mail_id'] }}</div>
+                                                                    </button>
+                                                                {% else %}
+                                                                    <button class="fa fa-star" style="border: none">
+                                                                        <div class="mail-index"
+                                                                             style="display: none">{{ mail['index'] }};{{ mail['mail_id'] }}</div>
+                                                                    </button>
+                                                                {% endif %}
+
+                                                            </td>
+                                                            <td class="sent_to_mailview">{{ mail['from'] }}</td>
+                                                            <td class="sent_to_mailview mailtitle">{{ mail['title'] }}</td>
+                                                            <td class="sent_to_mailview">
+                                                                {% if mail['filenames']|length > 0 %}
+                                                                    <i class="fa fa-paperclip"></i>
+                                                                {% endif %}
+                                                            </td>
+                                                            <td class="sent_to_mailview">{{ mail['date'] }}</td>
+                                                            </td>
+                                                            <td class="sent_to_mailview">
+                                                                <button data-method="setTop"
+                                                                        data-title="{{ mail['title'] }}"
+                                                                        data-content="{{ mail['content'] }}"
+                                                                        data-mailid="{{ mail['mail_id'] }}"
+                                                                        data-from="{{ mail['receivers'] }}"
+                                                                        class="layui-btn layui-btn-sm checkmail">查看
+                                                                </button>
+                                                            </td>
+                                                            {% if mail['filenames']|length > 0 %}
+                                                                    <td class="sent_to_mailview">
+                                                                        <button data-method="notice"
+                                                                                data-mailid="{{ mail['mail_id'] }}"
+                                                                                data-mailindex="{{ mail['index'] }}"
+                                                                                class="layui-btn layui-btn-sm download_files">下载附件
+                                                                        </button>
+                                                                    </td>
+                                                            {% endif %}
+                                                        </tr>
+                                                    {% endfor %}
+
+                                                    </tbody>
+                                                </table>
+
+                                                <div style="text-align: center;">
+                                                    {% for i in range(1, maxpages + 1) %}
+                                                        {% if i == curpage %}
+                                                            <a href="{{ purl }}/{{ i }}"
+                                                               class="layui-btn layui-btn-sm layui-bg-green">{{ i }}</a>
+                                                        {% else %}
+                                                            <a href="{{ purl }}/{{ i }}"
+                                                               class="layui-btn layui-btn-sm layui-bg-blue">{{ i }}</a>
+                                                        {% endif %}
+
+                                                    {% endfor %}
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../../static/js/components.js"></script>
+<script type="text/javascript" src="../../static/js/custom.js"></script>
+<!--End of Global scripts-->
+<!--Plugin scripts-->
+<script type="text/javascript" src="../../static/js/mail_box.js"></script>
+
+<script src="../../static/layui-v2.5.7/layui/layui.js"></script>
+<script>
+    function showtip(word, t = 2) {
+        if (word === "") {
+            return
+        }
+        layui.use("layer", function () {
+            var layertip = layui.layer;
+            layertip.msg(word, {offset: "auto", time: t * 1000})
+        });
+
+    }
+
+    layui.use('layer', function () { //独立版的layer无需执行这一句
+        var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+
+        //触发事件
+        var active = {
+            setTop: function (title, content) {
+                var that = this;
+                //多窗口模式，层叠置顶
+                layer.open({
+                    type: 1 //此处以iframe举例
+                    , title: title
+                    , area: 'auto'
+                    , shade: 0
+                    , maxmin: true
+                    , offset: 'auto'
+                    , content: content
+                    , btn: [] //只是为了演示
+                    , zIndex: layer.zIndex //重点1
+                    , success: function (layero) {
+                        layer.setTop(layero); //重点2
+                    }
+                });
+            }
+            , confirmTrans: function (title, content) {
+                //配置一个透明的询问框
+                layer.msg('大部分参数都是可以公用的<br>合理搭配，展示不一样的风格', {
+                    time: 20000, //20s后自动关闭
+                    btn: ['明白了', '知道了', '哦']
+                });
+            }
+            , notice: function (content) {
+                //示范一个公告层
+                layer.open({
+                    type: 1
+                    ,
+                    skin: 'notice_skin'
+                    ,
+                    title: false //不显示标题栏
+                    ,
+                    closeBtn: false
+                    ,
+                    area: 'auto'
+                    ,
+                    shade: 0.5
+                    ,
+                    id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                    ,
+                    btn: ['关闭']
+                    ,
+                    yes: function () {
+                        // 下载附件回调
+                        layer.closeAll();
+                    }
+                    ,
+                    btnAlign: 'c'
+                    ,
+                    moveType: 1 //拖拽模式，0或者1
+                    ,
+                    content: content
+                });
+            }
+            , offset: function (title, content) {
+                layer.open({
+                    type: 1
+                    , offset: type //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+                    , id: 'layerDemo' + type //防止重复弹出
+                    , content: '<div style="padding: 20px 100px;">' + content + '</div>'
+                    , btn: '关闭全部'
+                    , btnAlign: 'c' //按钮居中
+                    , shade: 0 //不显示遮罩
+                    , yes: function () {
+                        layer.closeAll();
+                    }
+                });
+            }
+        };
+
+        $('.checkmail').on('click', function () {
+            var othis = $(this);
+            method = othis.data('method');
+            title = othis.data('title');
+            content = othis.data('content');
+            var From = othis.data('from');
+            content = '<h4>相关邮箱: ' + From + '</h4><br><br>' + content
+            active[method] ? active[method].call(this, title,
+                '<div style="padding: 20px; line-height: 22px; font-weight: 300;">' + content + '</div>') : '';
+        });
+
+        $('.download_files').on('click', function () {
+            var othis = $(this);
+            method = othis.data('method');
+            mailid = othis.data('mailid');
+            mailindex = othis.data('mailindex');
+
+
+            $.post('/mail/download', {mail_ids: mailindex + ';' + mailid}, function (result) {
+                var jdata = eval(result);
+
+                var content = '<h4 style="color: white" ">点击文件进行下载: </h2><br>';
+                var ll = jdata['mailfiles'].length
+                for (var i=0; i< ll; i++){
+                    var f = jdata['mailfiles'][i];
+                    var file = f.split("/").pop();
+                    content = content + '<a download="' + file + '" style="color: white; padding: 15px" href="' + f + '">' + file + '</a><br>';
+                }
+
+                active[method] ? active[method].call(this,
+                '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">'+
+                content + '</div>') : '';
+
+            }, 'json')
+
+        });
+
+    });
+
+
+    $("button.fa-star").on('click', function () {
+        var mailid = $(this).children("div").first().text().split(';')[1];
+
+        $.post("/mail/star_mail/" + mailid, {}, function (result) {
+
+        })
+    })
+
+    $("button.mark-sended").on("click", function () {
+        var id_list = [];
+        $("tr.mail_tr_background").each(function (index, ele) {
+            var id = $(ele).data('mailid');
+            id_list.push(id);
+        }).css("color", "green");
+
+        $.post("/mail/mark_sended/", {mailidlist: id_list.toString()}, function (result) {
+            showtip(result)
+        })
+
+    })
+
+    $("button.mark-deleted").on("click", function () {
+        var id_list = [];
+        $("tr.mail_tr_background").each(function (index, ele) {
+            var id = $(ele).data('mailid');
+            id_list.push(id);
+        }).css("color", "orange");
+
+        $.post("/mail/mark_deleted/", {mailidlist: id_list.toString()}, function (result) {
+            showtip(result)
+        })
+
+    })
+
+    $("button.delete-mail").on("click", function () {
+        var id_list = [];
+        $("tr.mail_tr_background").each(function (index, ele) {
+            var ii = $(ele).data('mailindex');
+            var id = $(ele).data('mailid');
+            id_list.push(ii + ';' + id);
+        }).css("color", "red");
+
+        $.post("/mail/mail_db_delete/", {mailidlist: id_list.toString()}, function (result) {
+            showtip(result)
+        })
+
+    })
+
+
+</script>
+
+</body>
+</html>

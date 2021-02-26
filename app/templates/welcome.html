@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>welcome</title>
+
+    <link type="text/css" rel="stylesheet" href="../static/layui-v2.5.7/layui/css/layui.css">
+    <style type="text/css">
+        .main-text {
+            text-align: center;
+            border-radius: 20px;
+            width: 300px;
+            height: 350px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-text">
+    <h1>
+        欢迎来到Mail.com
+    </h1>
+    <h2 style="margin-top: 15px">首次使用请先进行<a style="color: #0e9aef" href="/mail/up_account">设置</a></h2>
+    <h2>授权码获取<a href="https://www.cnblogs.com/ag-chen/p/14450196.html" style="color: #0e9aef">参考链接</a></h2>
+
+    <h4 style="margin-top: 15px">发送协议: smtp</h4>
+    <form class="layui-form" action="" style="margin-top: 15px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">接收协议: </label>
+
+            <div class="layui-input-block">
+                <div>
+                    <select lay-verify="" id="s_id">
+                        {% if ss == 'pop' %}
+                            <option value="pop">pop</option>
+                            <option value="imap">imap</option>
+                        {% else %}
+                            <option value="imap">imap</option>
+                            <option value="pop">pop</option>
+                        {% endif %}
+                    </select>
+
+                </div>
+                <button type="button" id="start_sid" class="layui-btn layui-btn-sm layui-btn-radius"
+                        style="margin-top: 10px;">
+                    启用
+                </button>
+
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+</body>
+
+<script type="text/javascript" src="../static/js/components.js"></script>
+<script type="text/javascript" src="../static/js/custom.js"></script>
+<!--End of Global scripts-->
+<script src="../static/layui-v2.5.7/layui/layui.js"></script>
+<script src="../static/js/jquery.min.js"></script>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+    });
+
+
+    $('#start_sid').on('click', function () {
+        var server = $('#s_id').val();
+
+        $.post('/mail/change_server', {server: server}, function (result) {
+            layui.use('layer', function (){
+                var layer = layui.layer
+                layer.msg(result);
+            })
+        })
+
+    })
+
+
+</script>
+</html>

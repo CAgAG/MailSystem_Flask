@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>写信</title>
+
+    <link href="{{ pre }}../static/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="{{ pre }}../static/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="{{ pre }}../static/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="{{ pre }}../static/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="{{ pre }}../static/css/animate.css" rel="stylesheet">
+    <link href="{{ pre }}../static/css/style.css?v=4.1.0" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ pre }}../static/layui-v2.5.7/layui/css/layui.css">
+    
+    <!-- <script type="text/javascript" src="../static/ckeditor/ckeditor.js"></script> -->
+    <!--
+	<script type="text/javascript">
+		CKEDITOR.replace('afficheContent',{
+			filebrowserImageUploadUrl : "imageUpload.action",
+			language : 'zh-cn',
+		});
+	</script>
+	-->
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-md-12 animated fadeInRight">
+                <div class="mail-box-header">
+                    <div class="pull-right tooltip-demo">
+                        <a id="save_draft" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="存为草稿"><i class="fa fa-pencil"></i> 存为草稿</a>
+                    </div>
+                    <h2>
+                    	写信
+                	</h2>
+                </div>
+                <div class="mail-box">
+                    <div class="mail-body">
+                        <form class="form-horizontal" id="postform" method="post" action="/mail/send">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">发送到：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="" name="sendTo" placeholder="多个账号请用 ;(分号) 进行分割">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">主题：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" value="" name="title">
+                                </div>
+                            </div>
+
+                            <textarea rows="10" cols="40" name="content" id="content" style="display: none;"></textarea>
+
+                            <div class="mail-body text-right tooltip-demo">
+                                <button type="submit" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Send"><i class="fa fa-forward"></i> 发送</button>
+                            </div>
+
+                            <div class="layui-upload">
+                              <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
+                              <div class="layui-upload-list">
+                                <table class="layui-table">
+                                  <thead>
+                                    <tr><th>文件名</th>
+                                    <th>大小</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                  </tr></thead>
+                                  <tbody id="demoList"></tbody>
+                                </table>
+                              </div>
+                              <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+                            </div>
+
+                        </form>
+
+
+
+                    </div>
+
+                    <div class="mail-text h-200">
+                        <!--
+                        <textarea rows="10" cols="40" name="content" id="content"></textarea>#}
+					<script type="text/javascript">#}
+						window.onload = function(){#}
+							CKEDITOR.replace("content");#}
+						}#}
+					</script>#}
+                           -->
+
+                    </div>
+
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="{{ pre }}../static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="{{ pre }}../static/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+    <!-- 自定义js -->
+    <script src="{{ pre }}../static/js/content.js?v=1.0.0"></script>
+
+
+
+    <!-- SUMMERNOTE -->
+    <script src="{{ pre }}../static/plugins/summernote/summernote.min.js"></script>
+    <script src="{{ pre }}../static/plugins/summernote/summernote-zh-CN.js"></script>
+
+    <!--编辑器 -->
+    <script src="{{ pre }}../static/layui-v2.5.7/layui/layui.all.js"></script>
+    <script>
+        function showtip(word, t=2){
+            if (word === ""){
+                return
+            }
+            var layertip;
+            $(function () {
+                layui.use("layer", function () {
+                    layertip = layui.layer;
+                    layertip.msg(word, { offset: "auto", time:t*1000 })
+                });
+            })
+        }
+
+        $(function (){
+            $("#save_draft").click(function (){
+                $("#postform").attr('action', "/mail/draft").submit();
+            })
+        })
+
+        //由于模块都一次性加载，因此不用执行 layui.use() 来加载对应模块，直接使用即可：
+        // 富文本编辑器
+        layui.use('layedit', function () {
+            var layedit_demo = layui.layedit;
+            layedit_demo.set({
+                uploadImage: {
+                    url: '/mail/upFile' //接口url
+                    , type: 'post' //默认post
+                }
+            });
+            layedit_demo.build('content'); //建立编辑器
+        });
+
+        // 上传文件
+        layui.use('upload', function(){
+        var upload = layui.upload;
+            //多文件列表示例
+          var demoListView = $('#demoList')
+          ,uploadListIns = upload.render({
+            elem: '#testList'
+            ,url: '/mail/upFile' //改成您自己的上传接口
+            ,accept: 'file'
+            ,multiple: true
+            ,auto: false
+            ,bindAction: '#testListAction'
+            ,choose: function(obj){
+              var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+              //读取本地文件
+              obj.preview(function(index, file, result){
+                var tr = $(['<tr id="upload-'+ index +'">'
+                  ,'<td>'+ file.name +'</td>'
+                  ,'<td>'+ (file.size/1024).toFixed(1) +'kb</td>'
+                  ,'<td>等待上传</td>'
+                  ,'<td>'
+                    ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                    ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                  ,'</td>'
+                ,'</tr>'].join(''));
+
+                //单个重传
+                tr.find('.demo-reload').on('click', function(){
+                  obj.upload(index, file);
+                });
+
+                //删除
+                tr.find('.demo-delete').on('click', function(){
+                  delete files[index]; //删除对应的文件
+                  tr.remove();
+                  uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+                });
+
+                demoListView.append(tr);
+              });
+            }
+            ,done: function(res, index, upload){
+              if(res.code === 0){ //上传成功
+                var tr = demoListView.find('tr#upload-'+ index)
+                ,tds = tr.children();
+                tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                tds.eq(3).html(''); //清空操作
+                return delete this.files[index]; //删除文件队列已经上传成功的文件
+              }
+              this.error(index, upload);
+            }
+            ,error: function(index, upload){
+              var tr = demoListView.find('tr#upload-'+ index)
+              ,tds = tr.children();
+              tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+              tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+            }
+          });
+        });
+
+    </script>
+
+
+</body>
+
+</html>

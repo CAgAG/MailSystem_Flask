@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+
+    <link type="text/css" rel="stylesheet" href="../static/css/components.css"/>
+    <link type="text/css" rel="stylesheet" href="../static/css/custom.css"/>
+    <!-- end of global styles-->
+    <link type="text/css" rel="stylesheet" href="../static/plugins/fullcalendar/css/fullcalendar.min.css"/>
+    <link type="text/css" rel="stylesheet" href="../static/plugins/toastr/css/toastr.min.css"/>
+    <!-- style="background-color:#f3f3f4;" -->
+    <link type="text/css" rel="stylesheet" href="../static/layui-v2.5.7/layui/css/layui.css">
+
+
+</head>
+<body>
+
+<div style="padding: 20px; background-color: #F2F2F2;">
+
+
+    <div class="layui-row layui-col-space15" id="card-pane">
+        <div class="layui-col-md6">
+            <div class="layui-card" style="padding: 37px">
+                <p style="margin-top: 10px">
+                    <label>输入日期</label><input type="text" class="layui-input" id="test1">
+                </P>
+
+                <p style="margin-top: 10px">
+                    <label>标题</label><input type="text" id="title" required lay-verify="required" placeholder="请输入标题"
+                                            autocomplete="off" class="layui-input">
+                </p>
+
+                <p style="margin-top: 10px">
+                    <label>内容</label><textarea id="content" required lay-verify="required" placeholder="请输入内容"
+                                               class="layui-textarea"></textarea>
+                </p>
+                <p>
+                <div align="center">
+                    <button type="button" id="sub_content" class="layui-btn layui-btn-radius"
+                            style="margin-top: 10px; ">
+                        添加
+                    </button>
+                    <p style="margin-top: 10px">
+                        <select lay-verify="" id="del_id">
+                              <option value="">请选择删除标号</option>
+                              {% for calendar in calendars %}
+                                  <option value="{{ calendar['id'] }}">{{ calendar['id'] }}</option>
+                              {% endfor %}
+
+                        </select>
+                    </p>
+
+                    <button type="button" id="del_content" class="layui-btn layui-btn-radius layui-bg-red"
+                            style="margin-top: 10px; ">
+                        删除
+                    </button>
+                </div>
+                </p>
+
+            </div>
+        </div>
+
+        {% for calendar in calendars %}
+            <div class="layui-col-md6" id="card_{{ calendar['id'] }}" style="background: #00b386">
+                <div class="layui-card">
+
+                    <div class="layui-card-header">
+                        <button class="layui-btn layui-btn-xs layui-btn-radius layui-btn-danger">{{ calendar['id'] }}</button>{{ calendar['title'] }} - {{ calendar['date'] }}
+
+                    </div>
+                    <div class="layui-card-body">
+                        {{ calendar['content'] }}
+
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript" src="../static/js/components.js"></script>
+<script type="text/javascript" src="../static/js/custom.js"></script>
+<!--End of Global scripts-->
+<!--Plugin scripts-->
+<script type="text/javascript" src="../static/plugins/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../static/plugins/fullcalendar/js/fullcalendar.min.js"></script>
+<!-- end of plugin scripts -->
+
+<script src="../static/js/jquery.min.js?v=2.1.4"></script>
+<script src="../static/layui-v2.5.7/layui/layui.js"></script>
+
+<script>
+
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+
+        $('#sub_content').on('click', function () {
+            var cpane = $('#card-pane');
+            var title = $('#title').val();
+            var content = $('#content').val();
+            var date = $('#test1').val();
+            $.post('/calendar/add', {title: title, content: content, date: date}, function (result) {
+
+                var data = eval(result)
+                cpane.append(data['word'])
+                var c_id = data['c_id']
+                $("#del_id").append('<option value="' + c_id + '">' + c_id + '</option>')
+            }, 'json')
+        })
+
+        $('#del_content').on('click', function () {
+            var cpane = $('#card-pane');
+            var id = $('#del_id').val();
+
+            $.post('/calendar/delete', {id: id}, function (result) {
+                $("#card_" + id).css("background", "orange");
+            })
+
+        })
+
+    });
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#test1' //指定元素
+            , type: 'datetime'
+        });
+    });
+</script>
+
+</html>
