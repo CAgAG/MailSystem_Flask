@@ -181,7 +181,7 @@ def insert_receive_mail_by_username(username: str, addr: str, receiver: list,
     user_mails = mail.query.filter_by(username=username).all()
     for m in user_mails:
         user_mail_type = mailtype.query.filter_by(mailid=m.id).first()
-        if user_mail_type.uid == uid:
+        if (user_mail_type is not None) and (user_mail_type.uid == uid):
             return user_mail_type.mailid
 
     mail.username = username

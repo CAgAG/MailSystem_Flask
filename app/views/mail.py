@@ -244,7 +244,7 @@ def inbox(inds):
     topage = int(inds) - 1
     startindex = topage * indexlength
 
-    received_mails = mail_utils.get_mails(server=account.SSL.replace('smtp', 'pop'),
+    received_mails = mail_utils.get_mails(server=account.SSL.replace('smtp', get_server_pop_or_imap()),
                                           user=account.addr,
                                           pwd=account.pwd,
                                           username=username,
@@ -368,7 +368,7 @@ def mail_delete():
         database.delete_mail_by_id(mailid=int(id))
 
     mail_utils.delete_mail(
-        server=account.SSL.replace('smtp', 'pop'),
+        server=account.SSL.replace('smtp', get_server_pop_or_imap()),
         user=account.addr,
         pwd=account.pwd,
         ids=indexs,
@@ -388,7 +388,7 @@ def download_mail_file():
     mail_index = [request.form.get("mail_ids").split(';')[0]]
 
     paths = mail_utils.download_mail_files(
-        server=account.SSL.replace('smtp', 'pop'),
+        server=account.SSL.replace('smtp', get_server_pop_or_imap()),
         user=account.addr,
         pwd=account.pwd,
         username=username,
