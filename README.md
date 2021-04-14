@@ -25,9 +25,9 @@ python run.py
 
 <img src="./image/login.png" alt="login" style="zoom: 55%;" />
 
-<img src="D:\My_github\MailSystem_Flask\image\index.png" alt="index" style="zoom:50%;" />
+<img src="./image/index.png" alt="index" style="zoom:50%;" />
 
 <img src="./image/receive.png" alt="receive" style="zoom:50%;" />
 
-<img src="D:\My_github\MailSystem_Flask\image\send.png" alt="send" style="zoom:50%;" />
+<img src="./image/send.png" alt="send" style="zoom:50%;" />
 
