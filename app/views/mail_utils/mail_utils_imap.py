@@ -61,7 +61,7 @@ def get_mail_by_imap(server: str, user: str, pwd: str, username: str,
         ret2['title'] = msg['subject']
 
         # print('第一个收件人用户名', msg['to'].addresses[0].username)
-        ret2['first_receiver'] = msg['to'].addresses[0].username
+        ret2['first_receiver'] = msg['to'].addresses[0].username if not isinstance(msg['to'], str) else '保密'
         # print('第一个发件人用户名', msg['from'].addresses[0].username)
         ret2['first_sender'] = msg['from'].addresses[0].username
         ret2['content'] = ''
@@ -187,7 +187,12 @@ def get_mail_length_imap(server: str, user: str, pwd: str) -> int:
 
 
 def default_get_mail_by_imap():
-    pass
+    return get_mail_by_imap(
+        server='imap.163.com',
+        user='15685134992@163.com',
+        pwd='HSJKBVWZUUKPOOOK',
+        username='a'
+    )
 
 
 if __name__ == '__main__':
