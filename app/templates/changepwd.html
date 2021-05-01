@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>忘记密码</title>
+
+    <link rel="stylesheet" href="../static/layui-v2.5.7/layui/css/layui.css">
+
+    <style type="text/css">
+        .main-text {
+
+        }
+    </style>
+</head>
+
+<script>
+    function showtip(word, t = 2) {
+        if (word === "") {
+            return
+        }
+        var layertip;
+        $(function () {
+            layui.use("layer", function () {
+                layertip = layui.layer;
+                layertip.msg(word, {offset: "auto", time: t * 1000})
+            });
+        })
+    }
+
+    showtip("{{ msg }}")
+</script>
+
+
+<body>
+
+<div class="main-text">
+    <form class="layui-form" action="/user/resetpwd" method="post" style="padding: 30px">
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="addr" required lay-verify="email" placeholder="请输入注册的邮箱地址"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" required lay-verify="required" placeholder="用户名"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-inline">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+</body>
+
+<script src="../static/layui-v2.5.7/layui/layui.all.js"></script>
+<script>
+    //Demo
+    layui.use('form', function () {
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+
+            {#layer.msg(JSON.stringify(data.field));#}
+            layer.msg("上传成功")
+            return true;
+        });
+    });
+</script>
+
+</html>

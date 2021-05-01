@@ -34,8 +34,11 @@ def get_mail_length_pop3(server: str, user: str, pwd: str) -> int:
 
 def get_mail_by_pop3(server: str, user: str, pwd: str, username: str,
                      startindex=0, indexlength=9, endpage=False, download_files=False) -> dict:
+    # 启动POP3服务
     pop3 = poplib.POP3(server)
+    # 用户
     pop3.user(user)
+    # 密码
     pop3.pass_(pwd)
 
     # # 可选:打印POP3服务器的欢迎文字:
@@ -52,6 +55,7 @@ def get_mail_by_pop3(server: str, user: str, pwd: str, username: str,
     ret['mail_length'] = length
     ret['mails'] = []
 
+    # 分页
     startindex = length - startindex
     # endindex = startindex - indexlength
     endindex = 0
@@ -121,6 +125,7 @@ def get_mail_by_pop3(server: str, user: str, pwd: str, username: str,
                     fullpath = f'{filepath}/({i}){filename}'
                     i += 1
 
+                # 是否下载附件
                 if download_files:
                     # print('附件名称:', filename)
                     with open(os.path.join(fullpath), 'wb') as f:
@@ -129,6 +134,7 @@ def get_mail_by_pop3(server: str, user: str, pwd: str, username: str,
                 ret2['files'].append(fullpath)
                 ret2['filenames'].append(filename)
         ret['mails'].append(ret2)
+    # 退出
     pop3.quit()
     return ret
 
@@ -207,12 +213,7 @@ def delete_mail_by_pop3(server: str, user: str, pwd: str, ids: list):
 
 
 def default_get_mail_by_pop3():
-    return get_mail_by_pop3(
-        server='pop.163.com',
-        user='15685134992@163.com',
-        pwd='HSJKBVWZUUKPOOOK',
-        username='a'
-    )
+    pass
 
 
 if __name__ == '__main__':

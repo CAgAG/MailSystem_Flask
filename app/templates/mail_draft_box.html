@@ -59,6 +59,13 @@
                                                 刷新
                                             </a>
 
+                                            <button type="button" class="btn btn-labeled btn-primary recover">
+                                                   	<span class="btn-label">
+                                                     	<i class="fa fa-send"></i>
+                                                   	</span>
+                                                编辑发送
+                                            </button>
+
                                             <button type="button" class="btn btn-labeled btn-warning mark-deleted">
                                                    	<span class="btn-label">
                                                      	<i class="fa fa-trash-o"></i>
@@ -156,7 +163,10 @@
                                                     {% for mail in mails %}
                                                         <tr class="mail-unread"
                                                             data-mailid="{{ mail['mail_id'] }}"
-                                                            data-mailindex="{{ mail['index'] }}">
+                                                            data-mailindex="{{ mail['index'] }}"
+                                                            data-title="{{ mail['title'] }}"
+                                                            data-content="{{ mail['content'] }}"
+                                                            data-from="{{ mail['receivers'] }}">
                                                             <td>
 
                                                                 <div class="checker m-l-20">
@@ -423,9 +433,25 @@
             id_list.push(ii + ';' + id);
         }).css("color", "red");
 
-        $.post("/mail/mail_db_delete/", {mailidlist: id_list.toString()}, function (result) {
+        $.post("/mail/mail_db_delete/", {mailidlist: mailidlist}, function (result) {
             showtip(result)
         })
+
+    })
+
+    $("button.recover").on("click", function () {
+        var id_list = [];
+        $("tr.mail_tr_background").each(function (index, ele) {
+            var ii = $(ele).data('mailindex');
+            var id = $(ele).data('mailid');
+            id_list.push(ii + ';' + id);
+
+            sessionStorage.setItem("title", $(ele).data('title'))
+            sessionStorage.setItem("content", $(ele).data('content'))
+            sessionStorage.setItem("from", $(ele).data('from'))
+        }).css("color", "green");
+
+        showtip(word="请到写信进行查看")
 
     })
 

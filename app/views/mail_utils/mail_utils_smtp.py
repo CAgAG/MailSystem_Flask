@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
 """
-code=1: 成功发送,
+code=1: 成功发送, 
     =0: 失败
 """
 def send_mail_by_smtp(user_addr: str, pwd: str, SSL: str, port: int,
@@ -65,4 +65,5 @@ def send_mail_by_smtp(user_addr: str, pwd: str, SSL: str, port: int,
 
 
 def default_163_send_by_smtp():
+    import datetime
     pass

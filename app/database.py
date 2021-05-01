@@ -54,6 +54,15 @@ def get_user_info(username: str) -> models.User:
         return None
     return users[0]
 
+def reset_user_pwd(username: str) -> int:
+    """
+    :param username: 用户名
+    :return: 结果代码: 1: 成功, 0: 失败
+    """
+    return update_user_info(username=username, args={
+        'password': '12345678'
+    })
+
 
 def insert_mail_account_by_username(username: str, addr: str, SSL: str, pwd: str, port=465):
     """
@@ -444,3 +453,27 @@ def update_user_info(username: str, args: dict):
     except Exception:
         return 0
     return 1
+
+def get_mail_content_by_id(mailid: int):
+    mail = models.Mail()
+
+    m = mail.query.filter_by(id=mailid).first()
+    content = m.content
+
+    return content if content is not None else ''
+
+def get_mail_title_by_id(mailid: int):
+    mail = models.Mail()
+
+    m = mail.query.filter_by(id=mailid).first()
+    content = m.title
+
+    return content if content is not None else ''
+
+def get_mail_receivers_by_id(mailid: int):
+    mail = models.Mail()
+
+    m = mail.query.filter_by(id=mailid).first()
+    content = m.receivers
+
+    return content if content is not None else ''

@@ -42,20 +42,26 @@ def index():
 @user.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
+        # 重定向到登录页面
         return render_template('login.html')
 
+    # 得到前端账号, 密码
     username = request.form.get('username')
     password = request.form.get('password')
 
+    # 检查账号, 密码
     result = database.check_login(username, password)
 
+    # 返回提示信息
     if result == '登录成功':
         session['username'] = username
+        # 渲染页面
         return redirect(url_for('user.index'))
     else:
         ctx = {
             'results': result
         }
+        # 渲染页面
         return render_template('login.html', **ctx)
 
 
@@ -77,6 +83,9 @@ def register():
 def editpage():
     return render_template('user_info.html')
 
+@user.route('/forgetpwd')
+def forgetpwd():
+    return render_template('changepwd.html')
 
 @user.route('/edit', methods=['POST'])
 def edit():
@@ -103,3 +112,30 @@ def edit():
     }
 
     return render_template('show_result.html', **ctx)
+
+@user.route('/resetpwd', methods=['POST'])
+def resetpwd():
+
+    email_addr = request.form.get('addr')
+    username = request.form.get('username')
+
+    user = database.get_user_info(username=username)
+    if user is not None and user.email == email_addr:
+        database.reset_user_pwd(username=username)
+        ctx = {
+            'content': '密码已经重置为12345678, 请及时修改!'
+        }
+    else:
+        ctx = {
+            'content': '输入错误!'
+        }
+    return render_template('show_result.html', **ctx)
+
+@user.route('/exit', methods=['GET'])
+def exit():
+    session['username'] = ''
+    ctx = {
+        'results': "退出成功"
+    }
+    # 渲染页面
+    return render_template('login.html', **ctx)

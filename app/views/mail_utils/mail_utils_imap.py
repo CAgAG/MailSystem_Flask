@@ -187,12 +187,7 @@ def get_mail_length_imap(server: str, user: str, pwd: str) -> int:
 
 
 def default_get_mail_by_imap():
-    return get_mail_by_imap(
-        server='imap.163.com',
-        user='15685134992@163.com',
-        pwd='HSJKBVWZUUKPOOOK',
-        username='a'
-    )
+    pass
 
 
 if __name__ == '__main__':
