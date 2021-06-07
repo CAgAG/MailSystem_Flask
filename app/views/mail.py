@@ -12,7 +12,7 @@ mail_app = Blueprint('mail', __name__)
 
 # 默认添加的邮件标题前缀, 用于测试
 def default_title():
-    return f'滴滴答答~快收邮件！{datetime.datetime.now().strftime("%H:%M:%S %Y-%m-%d")} '
+    return f''
 
 
 def get_server_pop_or_imap():
